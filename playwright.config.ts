@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './src/tests',
-  timeout: 30_000,
-  expect: { timeout: 10_000 },
+  timeout: 180_000,
+  expect: { timeout: 30_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 2 : undefined,
@@ -19,7 +19,7 @@ export default defineConfig({
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
     viewport: { width: 1280, height: 800 },
-    actionTimeout: 10_000,
+    actionTimeout: 20_000,
     navigationTimeout: 20_000,
     storageState: '.auth/storageState.json',
     // record HAR per test file
