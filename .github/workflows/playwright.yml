@@ -1,6 +1,36 @@
 name: Playwright Tests
 
 on:
+  workflow_dispatch:
+    inputs:
+      group:
+        description: "Spec group to run"
+        type: choice
+        required: false
+        default: all
+        options: [all, web, api, mixed]
+      browser:
+        description: "Browser to run"
+        type: choice
+        required: false
+        default: all
+        options: [all, chromium, firefox, webkit]
+      tags:
+        description: "Playwright grep, e.g. @smoke or @api"
+        type: string
+        required: false
+        default: ""
+      data_source:
+        description: "Test data source"
+        type: choice
+        required: false
+        default: json
+        options: [json, yaml, excel, fixture]
+      pwdebug:
+        description: "Enable PWDEBUG=1"
+        type: boolean
+        required: false
+        default: false
   push:
   pull_request:
 
@@ -17,11 +47,14 @@ jobs:
             browser: firefox
           - group: api
             browser: webkit
+
     env:
+      # Inputs (when workflow_dispatch) override repo-level variables
       GOREST_TOKEN: ${{ secrets.API_TOKEN }}
-      DATA_SOURCE: ${{ vars.DATA_SOURCE || 'json' }}
-      TAGS: ${{ vars.TAGS }}
-      PWDEBUG: ""
+      DATA_SOURCE: ${{ github.event.inputs.data_source || vars.DATA_SOURCE || 'json' }}
+      TAGS: ${{ github.event.inputs.tags || vars.TAGS }}
+      PWDEBUG: ${{ github.event.inputs.pwdebug == 'true' && '1' || '' }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,7 +68,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      # Run only when inputs match this matrix entry, or when not manually dispatched
       - name: Run ${{ matrix.group }} specs on ${{ matrix.browser }}
+        if: ${{ github.event_name != 'workflow_dispatch' || (
+                (github.event.inputs.group == '' || github.event.inputs.group == 'all' || matrix.group == github.event.inputs.group) &&
+                (github.event.inputs.browser == '' || github.event.inputs.browser == 'all' || matrix.browser == github.event.inputs.browser)
+              ) }}
         shell: bash
         run: >
           npx playwright test
@@ -45,14 +83,20 @@ jobs:
           ${TAGS:+--grep} ${TAGS}
 
       - name: Upload HTML report (${{ matrix.group }} - ${{ matrix.browser }})
-        if: always()
+        if: ${{ always() && ( github.event_name != 'workflow_dispatch' || (
+                (github.event.inputs.group == '' || github.event.inputs.group == 'all' || matrix.group == github.event.inputs.group) &&
+                (github.event.inputs.browser == '' || github.event.inputs.browser == 'all' || matrix.browser == github.event.inputs.browser)
+              )) }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.group }}-${{ matrix.browser }}
           path: playwright-report
 
       - name: Upload Allure results (${{ matrix.group }} - ${{ matrix.browser }})
-        if: always()
+        if: ${{ always() && ( github.event_name != 'workflow_dispatch' || (
+                (github.event.inputs.group == '' || github.event.inputs.group == 'all' || matrix.group == github.event.inputs.group) &&
+                (github.event.inputs.browser == '' || github.event.inputs.browser == 'all' || matrix.browser == github.event.inputs.browser)
+              )) }}
         uses: actions/upload-artifact@v4
         with:
           name: allure-results-${{ matrix.group }}-${{ matrix.browser }}
