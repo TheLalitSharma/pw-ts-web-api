@@ -5,7 +5,7 @@ import { CheckoutPage } from '@pages/checkout.page';
 import { getTestData } from '@utils/data.fixture';
 import { expectPageScreenshot } from '@core/visual.helper';
 
-test.describe('cart & checkout @smoke', () => {
+test.describe('cart & checkout @smoke @visual', () => {
   test('add to cart and checkout', async ({ page }) => {
     const data = await getTestData();
     await page.goto('/inventory.html');
