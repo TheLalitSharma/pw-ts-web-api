@@ -71,7 +71,9 @@ jobs:
       # Cache Playwright browsers so they aren't reinstalled every run
       - name: Resolve Playwright version
         id: pw
-        run: echo "version=$(node -p \"require('@playwright/test/package.json').version\")" >> "$GITHUB_OUTPUT"
+        shell: bash
+        run: |
+          node -e "console.log('version=' + require('@playwright/test/package.json').version)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Playwright browsers
         id: cache-browsers
