@@ -1,0 +1,37 @@
+{
+  "name": "pw-ts-web-api",
+  "version": "1.0.0",
+  "scripts": {
+    "test:web": "playwright test src/tests/web --config=playwright.config.ts ${TAGS:+--grep} ${TAGS}",
+    "test:api": "playwright test src/tests/api --config=playwright.config.ts ${TAGS:+--grep} ${TAGS}",
+    "test:mixed": "playwright test src/tests/mixed --config=playwright.config.ts ${TAGS:+--grep} ${TAGS}",
+    "test:ci": "playwright test --config=playwright.ci.config.ts",
+    "test:dev": "playwright test --config=playwright.dev.config.ts",
+    "report:open": "playwright show-report",
+    "allure:generate": "allure generate --clean ./allure-results -o ./allure-report",
+    "allure:open": "allure open ./allure-report",
+    "visual:update": "playwright test src/tests/web --update-snapshots",
+    "clean": "rimraf playwright-report allure-report allure-results .playwright .auth storageState.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Playwright + TypeScript framework: Web UI + API",
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@types/node": "^24.10.0",
+    "typescript": "^5.9.3",
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.48.2",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "allure-js-commons": "^2.13.0",
+    "allure-playwright": "^2.12.0",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "faker-js": "^1.0.0",
+    "yaml": "^2.6.0"
+  }
+}

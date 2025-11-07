@@ -1,0 +1,12 @@
+
+# Playwright
+// path: .gitignore
+node_modules/
+.playwright/
+playwright-report/
+allure-results/
+allure-report/
+test-results/
+storageState.json
+.auth/
+.env
