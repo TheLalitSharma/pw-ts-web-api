@@ -57,7 +57,6 @@ jobs:
       DATA_SOURCE: ${{ github.event.inputs.data_source || vars.DATA_SOURCE || 'json' }}
       TAGS: ${{ github.event.inputs.tags || vars.TAGS }}
       PWDEBUG: ${{ github.event.inputs.pwdebug == 'true' && '1' || '' }}
-      PW_RETRIES: 2
 
     steps:
       - uses: actions/checkout@v4
@@ -79,20 +78,13 @@ jobs:
                 (github.event.inputs.browser == '' || github.event.inputs.browser == 'all' || matrix.browser == github.event.inputs.browser)
               ) }}
         shell: bash
-        run: |
-          # Visuals only on chromium to avoid baseline drift
-          if [[ "${{ matrix.group }}" == "web" && "${{ matrix.browser }}" != "chromium" ]]; then
-            npx playwright test src/tests/web \
-              --config=playwright.ci.config.ts \
-              --project=${{ matrix.browser }} \
-              --grep-invert @visual \
-              ${TAGS:+--grep} ${TAGS}
-          else
-            npx playwright test src/tests/${{ matrix.group }} \
-              --config=playwright.ci.config.ts \
-              --project=${{ matrix.browser }} \
-              ${TAGS:+--grep} ${TAGS}
-          fi
+        run: >
+          npx playwright test
+          src/tests/${{ matrix.group }}
+          --config=playwright.ci.config.ts
+          --project=${{ matrix.browser }}
+          --grep-invert @visual
+          ${TAGS:+--grep} ${TAGS}
 
       - name: Upload HTML report (${{ matrix.group }} - ${{ matrix.browser }})
         if: ${{ always() && ( github.event_name != 'workflow_dispatch' || (
