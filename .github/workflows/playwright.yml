@@ -47,6 +47,8 @@ jobs:
             browser: firefox
           - group: api
             browser: webkit
+          - group: mixed
+            browser: webkit
 
     env:
       # Inputs (when workflow_dispatch) override repo-level variables
