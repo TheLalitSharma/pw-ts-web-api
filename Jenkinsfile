@@ -11,6 +11,7 @@ pipeline {
         WORKSPACE_DIR = "${WORKSPACE}"
         REPORTS_DIR = "playwright-report"
         ALLURE_RESULTS = "allure-results"
+        PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${env.PATH}"
     }
     
     stages {
