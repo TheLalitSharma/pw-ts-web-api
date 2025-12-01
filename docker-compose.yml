@@ -1,0 +1,35 @@
+services:
+  playwright-tests:
+    image: mcr.microsoft.com/playwright:v1.48.0-jammy
+    container_name: playwright-tests-${ENVIRONMENT:-dev}
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - playwright-cache:/root/.cache/ms-playwright
+    environment:
+      - CI=true
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
+      - NODE_ENV=test
+      - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml
+    networks:
+      - playwright-network
+    command: tail -f /dev/null
+    
+  # Optional: Add any backend services your tests need
+  # Example: mock API server
+  # mock-api:
+  #   image: mockserver/mockserver:latest
+  #   container_name: mock-api-${ENVIRONMENT:-dev}
+  #   environment:
+  #     - MOCKSERVER_PROPERTY_FILE=/config/mockserver.properties
+  #   networks:
+  #     - playwright-network
+  #   ports:
+  #     - "1080:1080"
+
+networks:
+  playwright-network:
+    driver: bridge
+
+volumes:
+  playwright-cache:
