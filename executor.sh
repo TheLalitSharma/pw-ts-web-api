@@ -159,7 +159,7 @@ execute_tests() {
         export TEST_ENV=$ENVIRONMENT
         
         # Run tests with environment-specific configuration
-        npx playwright test --config=playwright.config.ts
+        npm run test:web -- --config=playwright.config.ts
     "
     TEST_EXIT_CODE=$?
     set -e
