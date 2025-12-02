@@ -1,9 +1,9 @@
 // path: tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "rootDir": ".",
     "baseUrl": ".",
@@ -17,8 +17,10 @@
     },
     "types": ["node", "playwright"],
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "allowJs": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true
   },

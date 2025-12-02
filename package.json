@@ -1,6 +1,7 @@
 {
   "name": "pw-ts-web-api",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "test:web": "playwright test src/tests/web --config=playwright.config.ts ${TAGS:+--grep} ${TAGS}",
     "test:api": "playwright test src/tests/api --config=playwright.config.ts ${TAGS:+--grep} ${TAGS}",
